@@ -72,4 +72,3 @@ CREATE TABLE IF NOT EXISTS raw.support_tickets (
     customer_satisfaction_score NUMERIC,
     notes TEXT
 );
-EOF

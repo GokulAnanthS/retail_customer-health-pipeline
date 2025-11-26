@@ -26,6 +26,7 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_EXECUTOR}
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_DB_URI}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY}
     entrypoint: >
       bash -c "
       airflow db init &&
@@ -38,6 +39,8 @@ services:
       "
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./sql:/opt/airflow/sql
 
   airflow-webserver:
     image: apache/airflow:2.9.1
@@ -50,9 +53,12 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_EXECUTOR}
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_DB_URI}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY}
     command: webserver
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./sql:/opt/airflow/sql
 
   airflow-scheduler:
     image: apache/airflow:2.9.1
@@ -63,9 +69,12 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW_EXECUTOR}
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: ${AIRFLOW_DB_URI}
+      AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW__WEBSERVER__SECRET_KEY}
     command: scheduler
     volumes:
       - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - ./sql:/opt/airflow/sql
 
 volumes:
   postgres_data:
