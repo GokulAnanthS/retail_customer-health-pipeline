@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:14
-    container_name: airflow_postgres
+    container_name: retail_postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -19,6 +19,7 @@ services:
 
   airflow-init:
     image: apache/airflow:2.9.1
+    container_name: retail_airflow_init
     depends_on:
       postgres:
         condition: service_healthy
@@ -40,6 +41,7 @@ services:
 
   airflow-webserver:
     image: apache/airflow:2.9.1
+    container_name: retail_airflow_webserver
     depends_on:
       airflow-init:
         condition: service_completed_successfully
@@ -54,6 +56,7 @@ services:
 
   airflow-scheduler:
     image: apache/airflow:2.9.1
+    container_name: retail_airflow_scheduler
     depends_on:
       airflow-init:
         condition: service_completed_successfully
