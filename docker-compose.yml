@@ -19,6 +19,7 @@ services:
 
   airflow-init:
     image: apache/airflow:2.9.1
+    build: .
     container_name: retail_airflow_init
     depends_on:
       postgres:
@@ -41,9 +42,12 @@ services:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
       - ./sql:/opt/airflow/sql
+      - ./dbt:/opt/airflow/dbt
+      - ./dbt/profiles:/home/airflow/.dbt
 
   airflow-webserver:
     image: apache/airflow:2.9.1
+    build: .
     container_name: retail_airflow_webserver
     depends_on:
       airflow-init:
@@ -59,9 +63,12 @@ services:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
       - ./sql:/opt/airflow/sql
+      - ./dbt:/opt/airflow/dbt
+      - ./dbt/profiles:/home/airflow/.dbt
 
   airflow-scheduler:
     image: apache/airflow:2.9.1
+    build: .
     container_name: retail_airflow_scheduler
     depends_on:
       airflow-init:
@@ -75,6 +82,8 @@ services:
       - ./dags:/opt/airflow/dags
       - ./data:/opt/airflow/data
       - ./sql:/opt/airflow/sql
+      - ./dbt:/opt/airflow/dbt
+      - ./dbt/profiles:/home/airflow/.dbt
 
 volumes:
   postgres_data:

@@ -1,0 +1,11 @@
+retail_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres
+      user: airflow
+      password: airflow
+      port: 5432
+      dbname: retail_db
+      schema: curated

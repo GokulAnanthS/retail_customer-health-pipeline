@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: customers
+    columns:
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+
+  - name: transactions
+    columns:
+      - name: transaction_id
+        tests:
+          - unique
+          - not_null
+
+  - name: interactions
+    columns:
+      - name: interaction_id
+        tests:
+          - unique
+          - not_null
+
+  - name: campaigns
+    columns:
+      - name: campaign_id
+        tests:
+          - unique
+          - not_null
+
+  - name: reviews
+    columns:
+      - name: review_id
+        tests:
+          - unique
+          - not_null
+
+  - name: support_tickets
+    columns:
+      - name: ticket_id
+        tests:
+          - unique
+          - not_null
