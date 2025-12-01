@@ -26,15 +26,17 @@ CREATE TABLE IF NOT EXISTS raw.transactions (
     discount_applied NUMERIC
 );
 CREATE TABLE IF NOT EXISTS raw.interactions (
-    interaction_id TEXT PRIMARY KEY,
-    customer_id TEXT,
-    channel TEXT,
-    interaction_type TEXT,
+    interaction_id VARCHAR(255),
+    customer_id VARCHAR(255),
+    channel VARCHAR(255),
+    interaction_type VARCHAR(255),
     interaction_date TIMESTAMP,
-    duration_seconds INTEGER,
-    page_or_product TEXT,
-    session_id TEXT
+    duration_seconds FLOAT,
+    page_or_product VARCHAR(255),
+    session_id VARCHAR(255)
 );
+
+
 CREATE TABLE IF NOT EXISTS raw.campaigns (
     campaign_id TEXT PRIMARY KEY,
     campaign_name TEXT,
@@ -50,16 +52,18 @@ CREATE TABLE IF NOT EXISTS raw.campaigns (
     roi NUMERIC
 );
 CREATE TABLE IF NOT EXISTS raw.customer_reviews (
-    review_id TEXT PRIMARY KEY,
-    customer_id TEXT,
-    product_name TEXT,
-    product_category TEXT,
+    review_id VARCHAR(255),
+    customer_id VARCHAR(255),
+    product_name VARCHAR(255),
+    product_category VARCHAR(255),
+    full_name VARCHAR(255),
     transaction_date DATE,
     review_date DATE,
-    rating INTEGER,
-    review_title TEXT,
+    rating INT,
+    review_title VARCHAR(500),
     review_text TEXT
 );
+
 CREATE TABLE IF NOT EXISTS raw.support_tickets (
     ticket_id TEXT PRIMARY KEY,
     customer_id TEXT,

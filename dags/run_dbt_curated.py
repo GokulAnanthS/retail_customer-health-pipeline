@@ -20,5 +20,14 @@ with DAG(
         task_id="dbt_test",
         bash_command=f"cd {DBT_DIR} && dbt test"
     )
+    dbt_analytics = BashOperator(
+    task_id="dbt_analytics",
+    bash_command=f"cd {DBT_DIR} && dbt run --select analytics"
+)
 
-    dbt_run >> dbt_test
+dbt_test_analytics = BashOperator(
+    task_id="dbt_test_analytics",
+    bash_command=f"cd {DBT_DIR} && dbt test --select analytics"
+)
+
+dbt_test >> dbt_analytics >> dbt_test_analytics

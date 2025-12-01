@@ -1,8 +1,10 @@
-SELECT interaction_id,
+select
+    interaction_id,
     customer_id,
     channel,
     interaction_type,
     interaction_date,
-    duration as duration_seconds,
+    duration_seconds,
+    page_or_product,
     session_id
-FROM raw.interactions
+from {{ source('raw', 'interactions') }}

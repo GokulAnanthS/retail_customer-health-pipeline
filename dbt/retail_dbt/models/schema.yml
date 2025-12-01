@@ -42,3 +42,21 @@ models:
         tests:
           - unique
           - not_null
+  - name: customer_profile
+  - name: rfm_metrics
+  - name: engagement_metrics
+  - name: support_metrics
+  - name: churn_signals
+  - name: churn_risk_score
+  - name: customer_health_score
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: customers
+      - name: transactions
+      - name: interactions     
+      - name: campaigns
+      - name: customer_reviews
+      - name: support_tickets

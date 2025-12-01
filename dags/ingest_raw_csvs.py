@@ -7,20 +7,6 @@ from datetime import datetime
 
 DATA_DIR = "/opt/airflow/data/raw"
 
-from sqlalchemy import create_engine
-
-def get_clean_engine():
-    # Matches docker-compose.yml settings
-    user = "airflow"
-    password = "airflow"
-    host = "postgres"
-    port = 5432
-    db = "retail_db"
-
-    conn_str = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}"
-    return create_engine(conn_str)
-
-
 def create_raw_schema():
     hook = PostgresHook(postgres_conn_id="postgres_default")
     sql_path = "/opt/airflow/sql/ingestion/create_raw_schema.sql"
@@ -34,7 +20,9 @@ def create_raw_tables():
         hook.run(f.read())
 
 def load_csv_to_postgres():
-    engine = get_clean_engine()
+    hook = PostgresHook(postgres_conn_id="postgres_default")
+    engine = hook.get_sqlalchemy_engine()
+    conn = engine.connect()
 
     files = {
         "customers.csv": "raw.customers",
@@ -46,21 +34,34 @@ def load_csv_to_postgres():
     }
 
     for filename, table in files.items():
-        path = os.path.join(DATA_DIR, filename)
-        df = pd.read_csv(path)
+        schema, table_name = table.split(".")
+
+        df = pd.read_csv(os.path.join(DATA_DIR, filename))
+
+        # 👉 FIX COLUMN NAME MISMATCH FOR INTERACTIONS
+        if table_name == "interactions" and "duration" in df.columns:
+            df = df.rename(columns={"duration": "duration_seconds"})
+
+        # TRUNCATE old data (safe for dbt dependencies)
+        conn.execute(f"TRUNCATE TABLE {schema}.{table_name} RESTART IDENTITY;")
+
+        # INSERT fresh rows
         df.to_sql(
-            table.split(".")[1],
-            engine,
-            schema="raw",
-            if_exists="replace",
+            name=table_name,
+            con=engine,
+            schema=schema,
+            if_exists="append",
             index=False
         )
-        print(f"Loaded {filename} → {table}")
 
+        print(f"[INGEST] Loaded {filename} → {table} (rows={len(df)})")
+
+
+    conn.close()
 
 with DAG(
     dag_id="ingest_raw_csvs",
-    start_date=datetime(2024,1,1),
+    start_date=datetime(2024, 1, 1),
     schedule_interval=None,
     catchup=False
 ):

@@ -8,4 +8,4 @@ retail_dbt:
       password: airflow
       port: 5432
       dbname: retail_db
-      schema: curated
+      schema: analytics
